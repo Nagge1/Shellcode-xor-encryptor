@@ -2,10 +2,10 @@
 """
 Shellcode XOR Encryptor
 
-Detta verktyg krypterar shellcode med XOR-nyckel för obfuskering.
-Används i pentesting för att undvika enkel detektion.
+This tool encrypts shellcode with an XOR key for obfuscation.
+Used in penetration testing to avoid simple detection.
 
-Användning:
+Usage:
     python xorcrypt.py --in raw.bin --out encrypted.bin --key 0x42 --format c
 """
 
@@ -14,14 +14,14 @@ import sys
 
 def xor_encrypt(data: bytes, key: bytes) -> bytes:
     """
-    Krypterar data med XOR och en nyckel.
+    Encrypts data with XOR and a key.
 
     Args:
-        data (bytes): Rå shellcode-data.
-        key (bytes): XOR-nyckel (kan vara flera bytes).
+        data (bytes): Raw shellcode data.
+        key (bytes): XOR key (can be multiple bytes).
 
     Returns:
-        bytes: Krypterad data.
+        bytes: Encrypted data.
     """
     key_len = len(key)
     encrypted = bytearray()
@@ -31,17 +31,17 @@ def xor_encrypt(data: bytes, key: bytes) -> bytes:
 
 def format_output(encrypted: bytes, format_type: str) -> str:
     """
-    Formaterar krypterad data för output.
+    Formats encrypted data for output.
 
     Args:
-        encrypted (bytes): Krypterad data.
-        format_type (str): 'raw', 'python', eller 'c'.
+        encrypted (bytes): Encrypted data.
+        format_type (str): 'raw', 'python', or 'c'.
 
     Returns:
-        str: Formaterad sträng.
+        str: Formatted string.
     """
     if format_type == 'raw':
-        return encrypted.hex()  # För visning, men sparas som binär
+        return encrypted.hex()  # For display, but saved as binary
     elif format_type == 'python':
         hex_values = [f'0x{b:02x}' for b in encrypted]
         return f'[{", ".join(hex_values)}]'
@@ -49,54 +49,54 @@ def format_output(encrypted: bytes, format_type: str) -> str:
         hex_values = [f'0x{b:02x}' for b in encrypted]
         return f'unsigned char buf[] = {{ {", ".join(hex_values)} }};'
     else:
-        raise ValueError(f"Okänt format: {format_type}")
+        raise ValueError(f"Unknown format: {format_type}")
 
 def main():
     """
-    Huvudfunktion som hanterar argument, kryptering och output.
+    Main function that handles arguments, encryption, and output.
     """
-    parser = argparse.ArgumentParser(description='XOR-kryptera shellcode för obfuskering.')
+    parser = argparse.ArgumentParser(description='XOR-encrypt shellcode for obfuscation.')
     parser.add_argument('--in', dest='input_file', required=True,
-                        help='Inputfil med rå shellcode (binär).')
+                        help='Input file with raw shellcode (binary).')
     parser.add_argument('--out', dest='output_file', required=True,
-                        help='Outputfil för krypterad shellcode.')
+                        help='Output file for encrypted shellcode.')
     parser.add_argument('--key', required=True,
-                        help='XOR-nyckel (hex som 0x42 eller sträng).')
+                        help='XOR key (hex like 0x42 or string).')
     parser.add_argument('--format', choices=['raw', 'python', 'c'], default='raw',
-                        help='Output-format (standard: raw).')
+                        help='Output format (default: raw).')
 
     args = parser.parse_args()
 
-    # Läs input-fil
+    # Read input file
     try:
         with open(args.input_file, 'rb') as f:
             data = f.read()
     except FileNotFoundError:
-        print(f"Fel: Inputfil '{args.input_file}' hittades inte.", file=sys.stderr)
+        print(f"Error: Input file '{args.input_file}' not found.", file=sys.stderr)
         sys.exit(1)
 
-    # Hantera nyckel: Om det börjar med 0x, behandla som hex, annars som sträng
+    # Handle key: If it starts with 0x, treat as hex, otherwise as string
     if args.key.startswith('0x'):
         try:
             key = bytes.fromhex(args.key[2:])
         except ValueError:
-            print(f"Fel: Ogiltig hex-nyckel '{args.key}'.", file=sys.stderr)
+            print(f"Error: Invalid hex key '{args.key}'.", file=sys.stderr)
             sys.exit(1)
     else:
         key = args.key.encode('utf-8')
 
     if not key:
-        print("Fel: Nyckel kan inte vara tom.", file=sys.stderr)
+        print("Error: Key cannot be empty.", file=sys.stderr)
         sys.exit(1)
 
-    # Kryptera
+    # Encrypt
     encrypted = xor_encrypt(data, key)
 
-    # Spara till output-fil (alltid som binär för raw, men för andra format skriv ut till stdout)
+    # Save to output file (always as binary for raw, but print formatted for others)
     with open(args.output_file, 'wb') as f:
         f.write(encrypted)
 
-    # Formatera och skriv ut
+    # Format and print
     formatted = format_output(encrypted, args.format)
     print(formatted)
 
