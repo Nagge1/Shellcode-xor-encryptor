@@ -1,91 +1,91 @@
 # Shellcode XOR Encryptor
 
-Detta är ett CLI-verktyg skrivet i Python som XOR-krypterar shellcode för obfuskering. Det används i pentesting för att undvika enkel detektion av antivirus eller andra säkerhetsverktyg. Verktyget krypterar rå shellcode med en XOR-nyckel och producerar output i olika format.
+This is a CLI tool written in Python that XOR-encrypts shellcode for obfuscation. It is used in penetration testing to avoid simple detection by antivirus or other security tools. The tool encrypts raw shellcode with an XOR key and produces output in various formats.
 
-## Installation och krav
+## Installation and Requirements
 
-- Python 3.x krävs.
-- Inga externa bibliotek behövs (använder endast standardbibliotek som `argparse`).
+- Python 3.x is required.
+- No external libraries are needed (uses only standard libraries like `argparse`).
 
-Klona eller ladda ner filen `xorcrypt.py` och placera den i din arbetskatalog.
+Clone or download the `xorcrypt.py` file and place it in your working directory.
 
-## Hur man kör det
+## How to Run It
 
-Kör verktyget från kommandoraden:
+Run the tool from the command line:
 
 ```
-python xorcrypt.py --in <inputfil> --out <outputfil> --key <nyckel> [--format <format>]
+python xorcrypt.py --in <inputfile> --out <outputfile> --key <key> [--format <format>]
 ```
 
-### Argument
+### Arguments
 
-- `--in`: Sökväg till inputfilen med rå shellcode (binär fil).
-- `--out`: Sökväg till outputfilen där krypterad shellcode sparas (binär).
-- `--key`: XOR-nyckel. Kan vara hex (t.ex. `0x42`) eller en sträng (t.ex. `"secret"`).
-- `--format`: Output-format för visning på skärmen. Alternativ: `raw` (hex-sträng), `python` (lista), `c` (C-array). Standard är `raw`.
+- `--in`: Path to the input file with raw shellcode (binary file).
+- `--out`: Path to the output file where encrypted shellcode is saved (binary).
+- `--key`: XOR key. Can be hex (e.g., `0x42`) or a string (e.g., `"secret"`).
+- `--format`: Output format for display on screen. Options: `raw` (hex string), `python` (list), `c` (C array). Default is `raw`.
 
-## Exempelkommandon
+## Example Commands
 
-### Exempel 1: Kryptera med hex-nyckel och C-format
+### Example 1: Encrypt with hex key and C format
 ```
 python xorcrypt.py --in raw.bin --out encrypted.bin --key 0x42 --format c
 ```
 
-Output på skärmen:
+Output on screen:
 ```
 unsigned char buf[] = { 0x12, 0xa1, 0x4f, ... };
 ```
 
-### Exempel 2: Kryptera med strängnyckel och Python-format
+### Example 2: Encrypt with string key and Python format
 ```
 python xorcrypt.py --in shellcode.bin --out output.bin --key "mykey" --format python
 ```
 
-Output på skärmen:
+Output on screen:
 ```
 [0x5a, 0x3b, 0x8f, ...]
 ```
 
-### Exempel 3: Kryptera och spara som rå binär (standardformat)
+### Example 3: Encrypt and save as raw binary (default format)
 ```
 python xorcrypt.py --in input.bin --out encrypted.bin --key 0xAB
 ```
 
-Output på skärmen: Hex-sträng av krypterad data.
+Output on screen: Hex string of encrypted data.
 
-## Hur man skapar test-shellcode
+## How to Create Test Shellcode
 
-För att testa verktyget, skapa en enkel binär fil med rå shellcode:
+To test the tool, create a simple binary file with raw shellcode:
 
-- **Använd Python för att skapa en fil:**
+- **Use Python to create a file:**
   ```
   python -c "with open('test.bin', 'wb') as f: f.write(bytes([0x90, 0x90, 0xCC]))"
   ```
-  Detta skapar `test.bin` med bytes `0x90` (NOP), `0x90`, `0xCC` (INT3).
+  This creates `test.bin` with bytes `0x90` (NOP), `0x90`, `0xCC` (INT3).
 
-- **Verifiera filen:** `python -c "with open('test.bin', 'rb') as f: print(f.read().hex())"`
+- **Verify the file:** `python -c "with open('test.bin', 'rb') as f: print(f.read().hex())"`
 
-## Verifiering och felsökning
+## Verification and Troubleshooting
 
-- **Reversibilitet:** XOR är symmetriskt. Kryptera en fil, kryptera resultatet igen med samma nyckel – du bör få tillbaka originalet.
-  Exempel:
+- **Reversibility:** XOR is symmetric. Encrypt a file, then encrypt the result again with the same key – you should get back the original.
+  Example:
   ```
   python xorcrypt.py --in original.bin --out enc.bin --key 0x42
   python xorcrypt.py --in enc.bin --out dec.bin --key 0x42
-  # dec.bin bör vara identisk med original.bin
+  # dec.bin should be identical to original.bin
   ```
 
-- **Vanliga fel:**
-  - "Fel: Inputfil hittades inte" – Kontrollera sökvägen.
-  - Ogiltig hex-nyckel – Använd format som `0x42` (inte `42`).
-  - Tom nyckel – Ange en giltig nyckel.
+- **Common errors:**
+  - "Error: Input file not found" – Check the path.
+  - Invalid hex key – Use format like `0x42` (not `42`).
+  - Empty key – Provide a valid key.
 
-## Säkerhet och etik
+## Security and Ethics
 
-- Detta verktyg är för **obfuskering**, inte säker kryptering. Används i pentesting för att undvika enkel detektion.
-- Använd endast för utbildning och etiska tester. Följ lagar och få tillstånd innan du testar på riktiga system.
-- Rekommenderas: Testa i en isolerad VM-miljö.
+- This tool is for **obfuscation**, not secure encryption. Used in pentesting to avoid simple detection.
+- Use only for educational and ethical testing. Follow laws and obtain permission before testing on real systems.
+- Recommended: Test in an isolated VM environment.
 
-## Licens
+## License
 
-Detta är ett utbildningsprojekt. Använd etiskt och enligt lag.
+This is an educational project. Use ethically and in accordance with the law.
