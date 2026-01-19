@@ -47,7 +47,7 @@ def format_output(encrypted: bytes, format_type: str) -> str:
         return f'[{", ".join(hex_values)}]'
     elif format_type == 'c':
         hex_values = [f'0x{b:02x}' for b in encrypted]
-        return f'unsigned char buf[] = {{ {", ".join(hex_values)} }};'
+        return f'unsigned char xored_shellcode[] = {{ {", ".join(hex_values)} }};'
     else:
         raise ValueError(f"Unknown format: {format_type}")
 
