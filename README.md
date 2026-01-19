@@ -33,7 +33,7 @@ python xorcrypt.py --in raw.bin --out encrypted.bin --key 0x42 --format c
 
 Output on screen:
 ```
-unsigned char buf[] = { 0x12, 0xa1, 0x4f, ... };
+unsigned char xored_shellcode[] = { 0x12, 0xa1, 0x4f, ... };
 ```
 
 ### Example 2: Encrypt with string key and Python format
@@ -59,9 +59,9 @@ To test the tool, create a simple binary file with raw shellcode:
 
 - **Use Python to create a file:**
   ```
-  python -c "with open('test.bin', 'wb') as f: f.write(bytes([0x90, 0x90, 0xCC]))"
+  python -c "with open('test.bin', 'wb') as f: f.write(bytes([0x90, 0x90, 0xC3]))"
   ```
-  This creates `test.bin` with bytes `0x90` (NOP), `0x90`, `0xCC` (INT3).
+  This creates `test.bin` with bytes `0x90` (NOP), `0x90`, `0xC3` (RET).
 
 - **Verify the file:** `python -c "with open('test.bin', 'rb') as f: print(f.read().hex())"`
 
