@@ -21,14 +21,14 @@ python xorcrypt.py --in <inputfile> --out <outputfile> --key <key> [--format <fo
 
 - `--in`: Path to the input file with raw shellcode (binary file).
 - `--out`: Path to the output file where encrypted shellcode is saved (binary).
-- `--key`: XOR key. Can be hex (e.g., `0x42`) or a string (e.g., `"secret"`).
+- `--key`: XOR key. Can be hex (e.g., `0x41`) or a string (e.g., `"secret"`).
 - `--format`: Output format for display on screen. Options: `raw` (hex string), `python` (list), `c` (C array). Default is `raw`.
 
 ## Example Commands
 
 ### Example 1: Encrypt with hex key and C format
 ```
-python xorcrypt.py --in raw.bin --out encrypted.bin --key 0x42 --format c
+python xorcrypt.py --in raw.bin --out encrypted.bin --key 0x41 --format c
 ```
 
 Output on screen:
@@ -77,7 +77,7 @@ To test the tool, create a simple binary file with raw shellcode:
 
 - **Common errors:**
   - "Error: Input file not found" – Check the path.
-  - Invalid hex key – Use format like `0x42` (not `42`).
+  - Invalid hex key – Use format like `0x41` (not `41`).
   - Empty key – Provide a valid key.
 
 ## Security and Ethics
